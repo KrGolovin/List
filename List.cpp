@@ -58,7 +58,11 @@ void List::print() {
 }
 
 List::~List() {
-
+    while(head_ != nullptr) {
+        Elem * curr = head_;
+        head_ = head_->getNext();
+        delete(curr);
+    }
 }
 
 
