@@ -136,7 +136,7 @@ void List::merge(List & second) {
         while ((firstPointer->getNext() != nullptr) && (firstPointer->getNext()->getValue() < secondPointer->getValue())) {
             firstPointer = firstPointer->getNext();
         }
-        if (first  Pointer->getNext() == nullptr) {
+        if (firstPointer->getNext() == nullptr) {
             firstPointer->setNext(secondPointer);
             tail_ = second.tail_;
             second.head_ = nullptr;
