@@ -8,14 +8,6 @@
 List::List(): tail_(nullptr), head_(nullptr) {
 }
 
-Elem *List::getHead() {
-    head_;
-}
-
-Elem *List::getTail() {
-    return tail_;
-}
-
 void List::operator+=(int value) {
     if (head_ == nullptr) {
         head_ = new Elem(value, nullptr);
@@ -49,14 +41,6 @@ void List::operator+=(int value) {
     }
 }
 
-void List::print() {
-    Elem* curr = head_;
-    do {
-        cout << curr->getValue() << ' ';
-        curr = curr->getNext();
-    } while (curr != nullptr);
-}
-
 List::~List() {
     while(head_ != nullptr) {
         Elem * curr = head_;
@@ -64,5 +48,113 @@ List::~List() {
         delete(curr);
     }
 }
+
+List::List(List && second): head_(second.head_), tail_(second.tail_) {
+    second.head_ = nullptr;
+    second.tail_ = nullptr;
+}
+
+std::ostream &operator<<(std::ostream &out, const List &list) {
+    Elem* curr = list.head_;
+    while (curr != nullptr) {
+        out << curr->getValue() << ' ';
+        curr = curr->getNext();
+    }
+    return out;
+}
+
+bool List::operator==(const List &second) const {
+    Elem* firstPointer = head_;
+    Elem* secondPointer = second.head_;
+    while((firstPointer != nullptr) && (secondPointer != nullptr)) {
+        if (firstPointer->getValue() != secondPointer->getValue()) {
+            return false;
+        } else {
+            firstPointer = firstPointer->getNext();
+            secondPointer = secondPointer->getNext();
+        }
+    }
+    return (firstPointer == nullptr) && (secondPointer == nullptr);
+}
+
+List operator&(const List & first, const List & second) {
+    List resultList;
+    Elem* firstPointer =first.head_;
+    Elem* secondPointer = second.head_;
+    while (firstPointer != nullptr) {
+        while(secondPointer != nullptr && secondPointer->getValue() < firstPointer->getValue()) {
+            secondPointer = secondPointer->getNext();
+        }
+        if (secondPointer == nullptr) {
+            return resultList;
+        } else if (firstPointer->getValue() == secondPointer->getValue()) {
+            resultList += firstPointer->getValue();
+        }
+        firstPointer = firstPointer->getNext();
+    }
+    return resultList;
+}
+
+List operator|(const List & first, const List & second) {
+    List resultList;
+    Elem* firstPointer =first.head_;
+    Elem* secondPointer = second.head_;
+    while (firstPointer != nullptr || secondPointer != nullptr) {
+        if (firstPointer != nullptr && (secondPointer == nullptr || (firstPointer->getValue() < secondPointer->getValue()))) {
+            resultList += firstPointer->getValue();
+            firstPointer = firstPointer->getNext();
+        } else {
+            resultList += secondPointer->getValue();
+            secondPointer = secondPointer->getNext();
+        }
+    }
+    return resultList;
+}
+
+void List::merge(List & second) {
+    Elem* firstPointer = head_;
+    Elem* secondPointer = second.head_;
+    if (secondPointer == nullptr) {
+        return;
+    } else if(firstPointer == nullptr) {
+        head_ = second.head_;
+        tail_ = second.tail_;
+        second.head_ = nullptr;
+        second.tail_ = nullptr;
+        return;
+    }
+    if (firstPointer->getValue() > secondPointer->getValue()) {
+        Elem* tmpPointer = secondPointer->getNext();
+        secondPointer->setNext(firstPointer);
+        head_ = secondPointer;
+        firstPointer = secondPointer;
+        secondPointer = tmpPointer;
+    } else if (firstPointer->getValue() == secondPointer->getValue()) {
+        secondPointer = secondPointer->getNext();
+    }
+    while (firstPointer != nullptr && secondPointer != nullptr) {
+        while ((firstPointer->getNext() != nullptr) && (firstPointer->getNext()->getValue() < secondPointer->getValue())) {
+            firstPointer = firstPointer->getNext();
+        }
+        if (first  Pointer->getNext() == nullptr) {
+            firstPointer->setNext(secondPointer);
+            tail_ = second.tail_;
+            second.head_ = nullptr;
+            second.tail_ = nullptr;
+            return;
+        } else if (firstPointer->getNext()->getValue() == secondPointer->getValue()) {
+            secondPointer = secondPointer->getNext();
+        } else {
+            Elem* tmpPointer = secondPointer->getNext();
+            secondPointer->setNext(firstPointer->getNext());
+            firstPointer->setNext(secondPointer);
+            firstPointer = secondPointer;
+            secondPointer = tmpPointer;
+        }
+    }
+    second.head_ = nullptr;
+    second.tail_ = nullptr;
+}
+
 
 

@@ -5,15 +5,19 @@
 #ifndef UNTITLED5_LIST_H
 #define UNTITLED5_LIST_H
 
+#include <iostream>
 #include "Elem.h"
 class List {
 public:
     List();
+    List(List &&);
     ~List();
-    Elem* getHead();
-    Elem* getTail();
     void operator+=(int);
-    void print();
+    bool operator==(const List &) const;
+    void merge(List &);
+    friend std::ostream& operator<< (std::ostream &, const List &);
+    friend List operator&(const List&, const List &);
+    friend List operator|(const List&, const List &);
 
 private:
     Elem* head_;

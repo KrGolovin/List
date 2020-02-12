@@ -11,7 +11,7 @@ Elem *&Elem::getNext() {
     return next_;
 }
 
-int Elem::getValue() {
+int Elem::getValue() const{
     return value_;
 }
 
@@ -22,5 +22,4 @@ void Elem::setValue(int value) {
 void Elem::setNext(Elem * next) {
     next_ = next;
 }
-
 

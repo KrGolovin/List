@@ -12,7 +12,7 @@ public:
     Elem* & getNext();
     void setValue(int value);
     void setNext(Elem *);
-    int getValue();
+    int getValue() const;
 private:
     Elem* next_;
     int value_;
